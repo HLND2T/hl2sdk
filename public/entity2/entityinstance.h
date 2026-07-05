@@ -83,10 +83,10 @@ public:
 	virtual void AddedToEntityDatabase() = 0;
 	virtual void Spawn( const CEntityKeyValues* pKeyValues ) = 0;
 
-	virtual void unk101() = 0;
+	virtual void PostDataUpdateDelta() = 0;
 
 	virtual void PostDataUpdate( /*DataUpdateType_t*/int updateType ) = 0;
-	virtual void OnDataUnchangedInPVS() = 0;
+	virtual void PostDataUpdatePreserve() = 0;
 	virtual void Activate( /*ActivateType_t*/int activateType ) = 0;
 	virtual void UpdateOnRemove() = 0;
 	virtual void OnSetDormant( /*EntityDormancyType_t*/int prevDormancyType, /*EntityDormancyType_t*/int newDormancyType ) = 0;
@@ -113,8 +113,8 @@ public:
 	virtual void NetworkStateChanged( const NetworkStateChangedData& data ) = 0;
 
 	// AMNOTE: NetworkState related methods
-	virtual void unk301( const void* data ) = 0;
-	virtual void unk302( const void* data ) = 0;
+	virtual void AddChangeAccessorPathPolymorphic( const void* data ) = 0;
+	virtual void AssignChangeAccessorPathIdsPolymorphic( const void* data ) = 0;
 
 	// Toggles network update state, if set to false would skip network updates
 	virtual void NetworkUpdateState( bool state ) = 0;
