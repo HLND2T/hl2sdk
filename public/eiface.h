@@ -363,6 +363,10 @@ public:
 	virtual void unk607() = 0;
 	virtual void unk608() = 0;
 	virtual void unk609() = 0;
+	virtual void unk610() = 0;
+	virtual void unk611() = 0;
+	virtual void unk612() = 0;
+	virtual void unk613() = 0;
 };
 
 abstract_class IServerGCLobby
