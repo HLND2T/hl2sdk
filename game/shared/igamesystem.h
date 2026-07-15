@@ -217,6 +217,7 @@ GS_EVENT_MSG_CHILD( ClientGamePostSimulate, Simulate ) {};
 GS_EVENT_MSG( ServerPostAdvanceTick ) {};
 GS_EVENT_MSG( ClientPostAdvanceTick ) {};
 
+GS_EVENT_MSG( ServerPreBeginAsyncPostTickWork ) {};
 GS_EVENT_MSG( ServerBeginAsyncPostTickWork )
 {
 	// AMNOTE: Also is set on gpGlobals->m_unk301
@@ -345,8 +346,7 @@ public:
 	GS_EVENT_IMPL( ServerPostAdvanceTick )					// 39
 	GS_EVENT_IMPL( ClientPostAdvanceTick )					// 40
 
-	virtual void unk_201( const void *const msg ) = 0;		// 41
-
+	GS_EVENT_IMPL( ServerPreBeginAsyncPostTickWork )		// 42
 	GS_EVENT_IMPL( ServerBeginAsyncPostTickWork )			// 42
 	GS_EVENT_IMPL( ServerPreEndAsyncPostTickWork )			// 43
 	GS_EVENT_IMPL( ServerPostEndAsyncPostTickWork )			// 44
@@ -459,8 +459,7 @@ public:
 	GS_EVENT( ServerPostAdvanceTick ) {}
 	GS_EVENT( ClientPostAdvanceTick ) {}
 
-	virtual void unk_201( const void *const msg ) override {}
-
+	GS_EVENT( ServerPreBeginAsyncPostTickWork ) {}
 	GS_EVENT( ServerBeginAsyncPostTickWork ) {}
 	GS_EVENT( ServerPreEndAsyncPostTickWork ) {}
 	GS_EVENT( ServerPostEndAsyncPostTickWork ) {}
