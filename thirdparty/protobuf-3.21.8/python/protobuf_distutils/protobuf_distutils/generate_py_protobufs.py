@@ -30,7 +30,7 @@
 
 """Implements the generate_py_protobufs command."""
 
-__author__ = 'dlj@google.com (David L. Jones)'
+__author__ = "dlj@google.com (David L. Jones)"
 
 import glob
 import sys
@@ -39,25 +39,23 @@ import distutils.spawn as spawn
 from distutils.cmd import Command
 from distutils.errors import DistutilsOptionError, DistutilsExecError
 
+
 class generate_py_protobufs(Command):
     """Generates Python sources for .proto files."""
 
-    description = 'Generate Python sources for .proto files'
+    description = "Generate Python sources for .proto files"
     user_options = [
-        ('extra-proto-paths=', None,
-         'Additional paths to resolve imports in .proto files.'),
-
-        ('protoc=', None,
-         'Path to a specific `protoc` command to use.'),
+        ("extra-proto-paths=", None, "Additional paths to resolve imports in .proto files."),
+        ("protoc=", None, "Path to a specific `protoc` command to use."),
     ]
-    boolean_options = ['recurse']
+    boolean_options = ["recurse"]
 
     def initialize_options(self):
         """Sets the defaults for the command options."""
         self.source_dir = None
         self.proto_root_path = None
         self.extra_proto_paths = []
-        self.output_dir = '.'
+        self.output_dir = "."
         self.proto_files = None
         self.recurse = True
         self.protoc = None
@@ -68,12 +66,12 @@ class generate_py_protobufs(Command):
         Defaults were set in `initialize_options`, but could have been changed
         by command-line options or by other commands.
         """
-        self.ensure_dirname('source_dir')
-        self.ensure_string_list('extra_proto_paths')
+        self.ensure_dirname("source_dir")
+        self.ensure_string_list("extra_proto_paths")
 
         if self.output_dir is None:
-            self.output_dir = '.'
-        self.ensure_dirname('output_dir')
+            self.output_dir = "."
+        self.ensure_dirname("output_dir")
 
         # SUBTLE: if 'source_dir' is a subdirectory of any entry in
         # 'extra_proto_paths', then in general, the shortest --proto_path prefix
@@ -111,37 +109,42 @@ class generate_py_protobufs(Command):
                 if self.proto_root_path.startswith(root_candidate):
                     self.proto_root_path = root_candidate
             if self.proto_root_path != self.source_dir:
-                self.announce('using computed proto_root_path: ' + self.proto_root_path, level=2)
+                self.announce("using computed proto_root_path: " + self.proto_root_path, level=2)
 
         if not self.source_dir.startswith(self.proto_root_path):
-            raise DistutilsOptionError('source_dir ' + self.source_dir +
-                                       ' is not under proto_root_path ' + self.proto_root_path)
+            raise DistutilsOptionError(
+                "source_dir " + self.source_dir + " is not under proto_root_path " + self.proto_root_path
+            )
 
         if self.proto_files is None:
-            files = glob.glob(os.path.join(self.source_dir, '*.proto'))
+            files = glob.glob(os.path.join(self.source_dir, "*.proto"))
             if self.recurse:
-                files.extend(glob.glob(os.path.join(self.source_dir, '**', '*.proto'), recursive=True))
+                files.extend(glob.glob(os.path.join(self.source_dir, "**", "*.proto"), recursive=True))
             self.proto_files = [f.partition(self.proto_root_path + os.path.sep)[-1] for f in files]
             if not self.proto_files:
-                raise DistutilsOptionError('no .proto files were found under ' + self.source_dir)
+                raise DistutilsOptionError("no .proto files were found under " + self.source_dir)
 
-        self.ensure_string_list('proto_files')
+        self.ensure_string_list("proto_files")
 
         if self.protoc is None:
-            self.protoc = os.getenv('PROTOC')
+            self.protoc = os.getenv("PROTOC")
         if self.protoc is None:
-            self.protoc = spawn.find_executable('protoc')
+            self.protoc = spawn.find_executable("protoc")
 
     def run(self):
         # All proto file paths were adjusted in finalize_options to be relative
         # to self.proto_root_path.
-        proto_paths = ['--proto_path=' + self.proto_root_path]
-        proto_paths.extend(['--proto_path=' + x for x in self.extra_proto_paths])
+        proto_paths = ["--proto_path=" + self.proto_root_path]
+        proto_paths.extend(["--proto_path=" + x for x in self.extra_proto_paths])
 
         # Run protoc. It was already resolved, so don't try to resolve
         # through PATH.
         spawn.spawn(
-            [self.protoc,
-             '--python_out=' + self.output_dir,
-            ] + proto_paths + self.proto_files,
-            search_path=0)
+            [
+                self.protoc,
+                "--python_out=" + self.output_dir,
+            ]
+            + proto_paths
+            + self.proto_files,
+            search_path=0,
+        )

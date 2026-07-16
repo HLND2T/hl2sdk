@@ -4,38 +4,40 @@ import argparse
 import json
 import re
 import os.path
+
 # BEGIN OPENSOURCE
 import sys
+
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 # END OPENSOURCE
 import tmp.benchmarks_pb2 as benchmarks_pb2
 
 __file_size_map = {}
 
+
 def __get_data_size(filename):
-  if filename[0] != '/':
-    filename = os.path.dirname(os.path.abspath(__file__)) + "/../" + filename
-  if filename in __file_size_map:
-    return __file_size_map[filename]
-  benchmark_dataset = benchmarks_pb2.BenchmarkDataset()
-  benchmark_dataset.ParseFromString(
-      open(filename, "rb").read())
-  size = 0
-  count = 0
-  for payload in benchmark_dataset.payload:
-    size += len(payload)
-    count += 1
-  __file_size_map[filename] = (size, 1.0 * size / count)
-  return size, 1.0 * size / count
+    if filename[0] != "/":
+        filename = os.path.dirname(os.path.abspath(__file__)) + "/../" + filename
+    if filename in __file_size_map:
+        return __file_size_map[filename]
+    benchmark_dataset = benchmarks_pb2.BenchmarkDataset()
+    benchmark_dataset.ParseFromString(open(filename, "rb").read())
+    size = 0
+    count = 0
+    for payload in benchmark_dataset.payload:
+        size += len(payload)
+        count += 1
+    __file_size_map[filename] = (size, 1.0 * size / count)
+    return size, 1.0 * size / count
 
 
 def __extract_file_name(file_name):
-  name_list = re.split(r"[/\.]", file_name)
-  short_file_name = ""
-  for name in name_list:
-    if name[:14] == "google_message":
-      short_file_name = name
-  return short_file_name
+    name_list = re.split(r"[/\.]", file_name)
+    short_file_name = ""
+    for name in name_list:
+        if name[:14] == "google_message":
+            short_file_name = name
+    return short_file_name
 
 
 __results = []
@@ -57,24 +59,25 @@ __results = []
 #   ...
 # ]
 def __parse_cpp_result(filename):
-  if filename == "":
-    return
-  if filename[0] != '/':
-    filename = os.path.dirname(os.path.abspath(__file__)) + '/' + filename
-  with open(filename, encoding="utf-8") as f:
-    results = json.loads(f.read())
-    for benchmark in results["benchmarks"]:
-      data_filename = "".join(
-          re.split("(_parse_|_serialize)", benchmark["name"])[0])
-      behavior = benchmark["name"][len(data_filename) + 1:]
-      if data_filename[:2] == "BM":
-        data_filename = data_filename[3:]
-      __results.append({
-        "language": "cpp",
-        "dataFilename": data_filename,
-        "behavior": behavior,
-        "throughput": benchmark["bytes_per_second"] / 2.0 ** 20
-      })
+    if filename == "":
+        return
+    if filename[0] != "/":
+        filename = os.path.dirname(os.path.abspath(__file__)) + "/" + filename
+    with open(filename, encoding="utf-8") as f:
+        results = json.loads(f.read())
+        for benchmark in results["benchmarks"]:
+            data_filename = "".join(re.split("(_parse_|_serialize)", benchmark["name"])[0])
+            behavior = benchmark["name"][len(data_filename) + 1 :]
+            if data_filename[:2] == "BM":
+                data_filename = data_filename[3:]
+            __results.append(
+                {
+                    "language": "cpp",
+                    "dataFilename": data_filename,
+                    "behavior": behavior,
+                    "throughput": benchmark["bytes_per_second"] / 2.0**20,
+                }
+            )
 
 
 # Synthetic benchmark results example:
@@ -92,19 +95,21 @@ def __parse_cpp_result(filename):
 #   ...
 # ]
 def __parse_synthetic_result(filename):
-  if filename == "":
-    return
-  if filename[0] != "/":
-    filename = os.path.dirname(os.path.abspath(__file__)) + "/" + filename
-  with open(filename, encoding="utf-8") as f:
-    results = json.loads(f.read())
-    for benchmark in results["benchmarks"]:
-      __results.append({
-          "language": "cpp",
-          "dataFilename": "",
-          "behavior": "synthetic",
-          "throughput": 10.0**9 / benchmark["cpu_time_ns"]
-      })
+    if filename == "":
+        return
+    if filename[0] != "/":
+        filename = os.path.dirname(os.path.abspath(__file__)) + "/" + filename
+    with open(filename, encoding="utf-8") as f:
+        results = json.loads(f.read())
+        for benchmark in results["benchmarks"]:
+            __results.append(
+                {
+                    "language": "cpp",
+                    "dataFilename": "",
+                    "behavior": "synthetic",
+                    "throughput": 10.0**9 / benchmark["cpu_time_ns"],
+                }
+            )
 
 
 # Python results example:
@@ -122,22 +127,24 @@ def __parse_synthetic_result(filename):
 #   ...
 # ]
 def __parse_python_result(filename):
-  if filename == "":
-    return
-  if filename[0] != '/':
-    filename = os.path.dirname(os.path.abspath(__file__)) + '/' + filename
-  with open(filename, encoding="utf-8") as f:
-    results_list = json.loads(f.read())
-    for results in results_list:
-      for result in results:
-        _, avg_size = __get_data_size(result["filename"])
-        for behavior in result["benchmarks"]:
-          __results.append({
-            "language": "python",
-            "dataFilename": __extract_file_name(result["filename"]),
-            "behavior": behavior,
-            "throughput": result["benchmarks"][behavior]
-          })
+    if filename == "":
+        return
+    if filename[0] != "/":
+        filename = os.path.dirname(os.path.abspath(__file__)) + "/" + filename
+    with open(filename, encoding="utf-8") as f:
+        results_list = json.loads(f.read())
+        for results in results_list:
+            for result in results:
+                _, avg_size = __get_data_size(result["filename"])
+                for behavior in result["benchmarks"]:
+                    __results.append(
+                        {
+                            "language": "python",
+                            "dataFilename": __extract_file_name(result["filename"]),
+                            "behavior": behavior,
+                            "throughput": result["benchmarks"][behavior],
+                        }
+                    )
 
 
 # Java results example:
@@ -172,28 +179,28 @@ def __parse_python_result(filename):
 #   ...
 # ]
 def __parse_java_result(filename):
-  if filename == "":
-    return
-  if filename[0] != '/':
-    filename = os.path.dirname(os.path.abspath(__file__)) + '/' + filename
-  with open(filename, encoding="utf-8") as f:
-    results = json.loads(f.read())
-    for result in results:
-      total_weight = 0
-      total_value = 0
-      for measurement in result["measurements"]:
-        total_weight += measurement["weight"]
-        total_value += measurement["value"]["magnitude"]
-      avg_time = total_value * 1.0 / total_weight
-      total_size, _ = __get_data_size(
-          result["scenario"]["benchmarkSpec"]["parameters"]["dataFile"])
-      __results.append({
-        "language": "java",
-        "throughput": total_size / avg_time * 1e9 / 2 ** 20,
-        "behavior": result["scenario"]["benchmarkSpec"]["methodName"],
-        "dataFilename": __extract_file_name(
-            result["scenario"]["benchmarkSpec"]["parameters"]["dataFile"])
-      })
+    if filename == "":
+        return
+    if filename[0] != "/":
+        filename = os.path.dirname(os.path.abspath(__file__)) + "/" + filename
+    with open(filename, encoding="utf-8") as f:
+        results = json.loads(f.read())
+        for result in results:
+            total_weight = 0
+            total_value = 0
+            for measurement in result["measurements"]:
+                total_weight += measurement["weight"]
+                total_value += measurement["value"]["magnitude"]
+            avg_time = total_value * 1.0 / total_weight
+            total_size, _ = __get_data_size(result["scenario"]["benchmarkSpec"]["parameters"]["dataFile"])
+            __results.append(
+                {
+                    "language": "java",
+                    "throughput": total_size / avg_time * 1e9 / 2**20,
+                    "behavior": result["scenario"]["benchmarkSpec"]["methodName"],
+                    "dataFilename": __extract_file_name(result["scenario"]["benchmarkSpec"]["parameters"]["dataFile"]),
+                }
+            )
 
 
 # Go benchmark results:
@@ -208,31 +215,33 @@ def __parse_java_result(filename):
 # PASS
 # ok    _/usr/local/google/home/yilunchong/mygit/protobuf/benchmarks  124.173s
 def __parse_go_result(filename):
-  if filename == "":
-    return
-  if filename[0] != '/':
-    filename = os.path.dirname(os.path.abspath(__file__)) + '/' + filename
-  with open(filename, encoding="utf-8") as f:
-    for line in f:
-      result_list = re.split(r"[\ \t]+", line)
-      if result_list[0][:9] != "Benchmark":
-        continue
-      first_slash_index = result_list[0].find('/')
-      last_slash_index = result_list[0].rfind('/')
-      full_filename = result_list[0][first_slash_index+1:last_slash_index]
-      total_bytes, _ = __get_data_size(full_filename)
-      behavior_with_suffix = result_list[0][last_slash_index+1:]
-      last_dash = behavior_with_suffix.rfind("-")
-      if last_dash == -1:
-        behavior = behavior_with_suffix
-      else:
-        behavior = behavior_with_suffix[:last_dash]
-      __results.append({
-        "dataFilename": __extract_file_name(full_filename),
-        "throughput": total_bytes / float(result_list[2]) * 1e9 / 2 ** 20,
-        "behavior": behavior,
-        "language": "go"
-      })
+    if filename == "":
+        return
+    if filename[0] != "/":
+        filename = os.path.dirname(os.path.abspath(__file__)) + "/" + filename
+    with open(filename, encoding="utf-8") as f:
+        for line in f:
+            result_list = re.split(r"[\ \t]+", line)
+            if result_list[0][:9] != "Benchmark":
+                continue
+            first_slash_index = result_list[0].find("/")
+            last_slash_index = result_list[0].rfind("/")
+            full_filename = result_list[0][first_slash_index + 1 : last_slash_index]
+            total_bytes, _ = __get_data_size(full_filename)
+            behavior_with_suffix = result_list[0][last_slash_index + 1 :]
+            last_dash = behavior_with_suffix.rfind("-")
+            if last_dash == -1:
+                behavior = behavior_with_suffix
+            else:
+                behavior = behavior_with_suffix[:last_dash]
+            __results.append(
+                {
+                    "dataFilename": __extract_file_name(full_filename),
+                    "throughput": total_bytes / float(result_list[2]) * 1e9 / 2**20,
+                    "behavior": behavior,
+                    "language": "go",
+                }
+            )
 
 
 # Self built json results example:
@@ -248,105 +257,77 @@ def __parse_go_result(filename):
 #   ...
 # ]
 def __parse_custom_result(filename, language):
-  if filename == "":
-    return
-  if filename[0] != '/':
-    filename = os.path.dirname(os.path.abspath(__file__)) + '/' + filename
-  with open(filename, encoding="utf-8") as f:
-    results = json.loads(f.read())
-    for result in results:
-      _, avg_size = __get_data_size(result["filename"])
-      for behavior in result["benchmarks"]:
-        __results.append({
-          "language": language,
-          "dataFilename": __extract_file_name(result["filename"]),
-          "behavior": behavior,
-          "throughput": result["benchmarks"][behavior]
-        })
+    if filename == "":
+        return
+    if filename[0] != "/":
+        filename = os.path.dirname(os.path.abspath(__file__)) + "/" + filename
+    with open(filename, encoding="utf-8") as f:
+        results = json.loads(f.read())
+        for result in results:
+            _, avg_size = __get_data_size(result["filename"])
+            for behavior in result["benchmarks"]:
+                __results.append(
+                    {
+                        "language": language,
+                        "dataFilename": __extract_file_name(result["filename"]),
+                        "behavior": behavior,
+                        "throughput": result["benchmarks"][behavior],
+                    }
+                )
 
 
 def __parse_js_result(filename, language):
-  return __parse_custom_result(filename, language)
+    return __parse_custom_result(filename, language)
+
 
 def __parse_php_result(filename, language):
-  return __parse_custom_result(filename, language)
+    return __parse_custom_result(filename, language)
 
 
-def get_result_from_file(cpp_file="",
-                         java_file="",
-                         python_file="",
-                         go_file="",
-                         synthetic_file="",
-                         node_file="",
-                         php_c_file="",
-                         php_file=""):
-  results = {}
-  if cpp_file != "":
-    __parse_cpp_result(cpp_file)
-  if java_file != "":
-    __parse_java_result(java_file)
-  if python_file != "":
-    __parse_python_result(python_file)
-  if go_file != "":
-    __parse_go_result(go_file)
-  if synthetic_file != "":
-    __parse_synthetic_result(synthetic_file)
-  if node_file != "":
-    __parse_js_result(node_file, "node")
-  if php_file != "":
-    __parse_php_result(php_file, "php")
-  if php_c_file != "":
-    __parse_php_result(php_c_file, "php")
+def get_result_from_file(
+    cpp_file="", java_file="", python_file="", go_file="", synthetic_file="", node_file="", php_c_file="", php_file=""
+):
+    results = {}
+    if cpp_file != "":
+        __parse_cpp_result(cpp_file)
+    if java_file != "":
+        __parse_java_result(java_file)
+    if python_file != "":
+        __parse_python_result(python_file)
+    if go_file != "":
+        __parse_go_result(go_file)
+    if synthetic_file != "":
+        __parse_synthetic_result(synthetic_file)
+    if node_file != "":
+        __parse_js_result(node_file, "node")
+    if php_file != "":
+        __parse_php_result(php_file, "php")
+    if php_c_file != "":
+        __parse_php_result(php_c_file, "php")
 
-  return __results
+    return __results
 
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
-  parser.add_argument(
-      "-cpp",
-      "--cpp_input_file",
-      help="The CPP benchmark result file's name",
-      default="")
-  parser.add_argument(
-      "-java",
-      "--java_input_file",
-      help="The Java benchmark result file's name",
-      default="")
-  parser.add_argument(
-      "-python",
-      "--python_input_file",
-      help="The Python benchmark result file's name",
-      default="")
-  parser.add_argument(
-      "-go",
-      "--go_input_file",
-      help="The golang benchmark result file's name",
-      default="")
-  parser.add_argument(
-      "-node",
-      "--node_input_file",
-      help="The node.js benchmark result file's name",
-      default="")
-  parser.add_argument(
-      "-php",
-      "--php_input_file",
-      help="The pure php benchmark result file's name",
-      default="")
-  parser.add_argument(
-      "-php_c",
-      "--php_c_input_file",
-      help="The php with c ext benchmark result file's name",
-      default="")
-  args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-cpp", "--cpp_input_file", help="The CPP benchmark result file's name", default="")
+    parser.add_argument("-java", "--java_input_file", help="The Java benchmark result file's name", default="")
+    parser.add_argument("-python", "--python_input_file", help="The Python benchmark result file's name", default="")
+    parser.add_argument("-go", "--go_input_file", help="The golang benchmark result file's name", default="")
+    parser.add_argument("-node", "--node_input_file", help="The node.js benchmark result file's name", default="")
+    parser.add_argument("-php", "--php_input_file", help="The pure php benchmark result file's name", default="")
+    parser.add_argument(
+        "-php_c", "--php_c_input_file", help="The php with c ext benchmark result file's name", default=""
+    )
+    args = parser.parse_args()
 
-  results = get_result_from_file(
-      cpp_file=args.cpp_input_file,
-      java_file=args.java_input_file,
-      python_file=args.python_input_file,
-      go_file=args.go_input_file,
-      node_file=args.node_input_file,
-      php_file=args.php_input_file,
-      php_c_file=args.php_c_input_file,
-  )
-  print(json.dumps(results, indent=2))
+    results = get_result_from_file(
+        cpp_file=args.cpp_input_file,
+        java_file=args.java_input_file,
+        python_file=args.python_input_file,
+        go_file=args.go_input_file,
+        node_file=args.node_input_file,
+        php_file=args.php_input_file,
+        php_c_file=args.php_c_input_file,
+    )
+    print(json.dumps(results, indent=2))
