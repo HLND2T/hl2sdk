@@ -230,6 +230,10 @@ public:
 	// Issue the specified command to the specified client (mimics that client typing the command at the console).
 	virtual void		ClientCommand( CPlayerSlot nSlot, const char *szFmt, ... ) FMTFUNCTION( 3, 4 ) = 0;
 
+	// Set the lightstyle to the specified value and network the change to any connected clients.  Note that val must not
+	//  change place in memory (use MAKE_STRING) for anything that's not compiled into your mod.
+	virtual void		LightStyle( int style, const char *val ) = 0;
+
 	// Print szMsg to the client console.
 	virtual void		ClientPrintf( CPlayerSlot nSlot, const char *szMsg ) = 0;
 
@@ -359,6 +363,10 @@ public:
 	virtual void unk607() = 0;
 	virtual void unk608() = 0;
 	virtual void unk609() = 0;
+	virtual void unk610() = 0;
+	virtual void unk611() = 0;
+	virtual void unk612() = 0;
+	virtual void unk613() = 0;
 };
 
 abstract_class IServerGCLobby
