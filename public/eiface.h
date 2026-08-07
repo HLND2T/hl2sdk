@@ -28,7 +28,7 @@
 #include "playerslot.h"
 #include <iloopmode.h>
 #include "network_connection.pb.h"
-#include "entityidentity.h"
+#include "entity2/entityidentity.h"
 #include "checktransmitinfo.h"
 #include "networksystem/inetworksystem.h"
 
@@ -458,28 +458,60 @@ public:
 	virtual void			PreFatalShutdown( void ) const = 0;
 	virtual void			UpdateWhenNotInGame( float flFrameTime ) = 0;
 
-	virtual void			GetEconItemNamesForModel( const char *pModelName, bool bExcludeItemSets, bool bExcludeIndividualItems, CUtlVector<CUtlString> &econItemNames ) = 0;
-	virtual void			GetEconItemNamesForCharacter( const char *pCharacterName, bool bExcludeItemSets, bool bExcludeIndividualItems, CUtlVector<CUtlString> &econItemNames ) = 0;
-	virtual void			GetEconItemsInfoForModel( const char *pModelName, const char *pEconItemName, bool bExcludeItemSets, bool bExcludeIndividualItems, bool bExcludeStockItemSet, CUtlVector<EconItemInfo_t> &econInfo ) = 0;
-	virtual void			GetEconItemsInfoForCharacter( const char *pCharacterName, const char *pEconItemName, bool bExcludeItemSets, bool bExcludeIndividualItems, bool bExcludeStockItemSet, CUtlVector<EconItemInfo_t> &econInfo ) = 0;
-
-	virtual void			GetDefaultScaleForModel( const char *pModelName, bool bCheckLoadoutScale ) = 0;
-	virtual void			GetDefaultScaleForCharacter( const char *pCharacterName, bool bCheckLoadoutScale ) = 0;
-	virtual void			GetDefaultControlPointAutoUpdates( const char *pParticleSystemName, CUtlVector<EconControlPointInfo_t> &autoUpdates ) = 0;
-
-	virtual void			unk_201() = 0;
-
-	virtual void			GetCharacterNameForModel( const char *pModelName, bool bCheckItemModifiers, CUtlString &characterName ) = 0;
-	virtual void			GetModelNameForCharacter( const char *pCharacterNamel, int nIndex, CBufferString &modelName ) = 0;
-	virtual void			GetCharacterList( CUtlVector<CUtlString> &characterNames ) = 0;
-	virtual void			GetDefaultChoreoDirForModel( const char *pModelName, CBufferString &defaultVCDDir ) = 0;
-
-	virtual void			*GetEconItemSystem( void ) = 0;
-
+	// CSource2Server primary vtable slots 46-98 are only partially identified.
+	virtual void			unk_046() = 0;
 	virtual void			ServerConVarChanged( const char *pVarName, const char *pValue ) = 0;
-
-	// Returns a list of values and names corresponding to HitGroup_t enum
-	virtual void			GetHitGroupEnumInfo( CUtlVector<int> &values, CUtlVector<CUtlString> &names ) = 0;
+	virtual void			unk_048() = 0;
+	virtual void			unk_049() = 0;
+	virtual void			unk_050() = 0;
+	virtual void			unk_051() = 0;
+	virtual void			GetLevelsFromSaveFile( const char *pFileName, CUtlVector<CCreateGameServerLoadInfo> &loadInfo, bool bUnknown ) = 0;
+	virtual void			unk_053() = 0;
+	virtual void			unk_054() = 0;
+	virtual void			unk_055() = 0;
+	virtual void			unk_056() = 0;
+	virtual void			Save() = 0;
+	virtual void			unk_058() = 0;
+	virtual void			unk_059() = 0;
+	virtual void			unk_060() = 0;
+	virtual void			unk_061() = 0;
+	virtual void			unk_062() = 0;
+	virtual void			unk_063() = 0;
+	virtual void			unk_064() = 0;
+	virtual void			unk_065() = 0;
+	virtual void			unk_066() = 0;
+	virtual void			unk_067() = 0;
+	virtual void			unk_068() = 0;
+	virtual void			unk_069() = 0;
+	virtual void			unk_070() = 0;
+	virtual void			unk_071() = 0;
+	virtual void			unk_072() = 0;
+	virtual void			unk_073() = 0;
+	virtual void			unk_074() = 0;
+	virtual void			unk_075() = 0;
+	virtual void			unk_076() = 0;
+	virtual void			unk_077() = 0;
+	virtual void			unk_078() = 0;
+	virtual void			unk_079() = 0;
+	virtual void			unk_080() = 0;
+	virtual void			unk_081() = 0;
+	virtual void			unk_082() = 0;
+	virtual void			unk_083() = 0;
+	virtual void			unk_084() = 0;
+	virtual void			unk_085() = 0;
+	virtual void			unk_086() = 0;
+	virtual void			unk_087() = 0;
+	virtual void			unk_088() = 0;
+	virtual void			unk_089() = 0;
+	virtual void			unk_090() = 0;
+	virtual void			unk_091() = 0;
+	virtual void			unk_092() = 0;
+	virtual void			unk_093() = 0;
+	virtual void			unk_094() = 0;
+	virtual void			unk_095() = 0;
+	virtual void			unk_096() = 0;
+	virtual void			unk_097() = 0;
+	virtual void			unk_098() = 0;
 };
 
 //-----------------------------------------------------------------------------

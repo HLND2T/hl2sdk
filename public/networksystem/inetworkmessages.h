@@ -7,6 +7,7 @@
 
 #include <eiface.h>
 
+#include <interfaces/interfaces.h>
 #include <networksystem/inetworkserializer.h>
 #include <networksystem/netmessage.h>
 #include <tier1/bitbuf.h>

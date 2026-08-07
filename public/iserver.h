@@ -45,6 +45,7 @@ class CSVCMsg_ServerInfo_t;
 class CServerSideClientBase;
 class C2S_CONNECT_Message;
 class CMsgVoiceAudio;
+class ns_address;
 
 typedef int ChallengeType_t;
 typedef int PauseGroup_t;
