@@ -10,8 +10,6 @@
 #pragma once
 #endif
 
-#include "tier1/utlstringtoken.h"
-#include "tier1/utlmemory.h"
 #include "tier1/strtools.h"
 #include "limits.h"
 
@@ -469,7 +467,7 @@ typedef	CUtlConstStringBase<wchar_t>	CUtlConstWideString;
 template < typename T > struct UTLConstStringCaselessStringLessFunctor { bool operator()( const CUtlConstStringBase<T>& a, const char *b ) const { return StringFuncs<T>::CaselessCompare( a.Get(), b ) < 0; } };
 template < typename T > struct UTLConstStringCaselessStringEqualFunctor { bool operator()( const CUtlConstStringBase<T>& a, const char *b ) const { return StringFuncs<T>::CaselessCompare( a.Get(), b ) == 0; } };
 
-// Helper function for CUtlMaps with a CUtlString key
+// Helper function for CUtlOrderedMaps with a CUtlString key
 inline bool UtlStringLessFunc( const CUtlString &lhs, const CUtlString &rhs ) { return V_strcmp( lhs.Get(), rhs.Get() ) < 0; } 
 inline bool UtlStringCaseInsensitiveLessFunc( const CUtlString &lhs, const CUtlString &rhs ) { return V_stricmp( lhs.Get(), rhs.Get() ) < 0; } 
 

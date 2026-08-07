@@ -14,10 +14,9 @@
 #include <tier1/utldict.h>
 #include <tier1/utlhash.h>
 #include "Color.h"
+#include "schemasystem/schematypes.h"
 
 #include <memory>
-
-#define CODEGEN_HASH_TOKEN (0x3501A674)
 
 class CNetMessage;
 class CNetworkSerializerCodeGenDatabase;
@@ -226,7 +225,7 @@ struct SerializerFieldLookup_t
 };
 
 template<> struct DefaultEqualFunctor<SerializerFieldLookup_t> { bool operator()( SerializerFieldLookup_t a, SerializerFieldLookup_t b ) const { return a.m_FieldName == b.m_FieldName; } };
-template<> struct DefaultHashFunctor<SerializerFieldLookup_t> { unsigned int operator()( SerializerFieldLookup_t a ) const { return MurmurHash2LowerCase( a.m_FieldName.String(), CODEGEN_HASH_TOKEN ); } };
+template<> struct DefaultHashFunctor<SerializerFieldLookup_t> { unsigned int operator()( SerializerFieldLookup_t a ) const { return HashStringCaseless( a.m_FieldName.String() ); } };
 
 class CNetworkSerializerClassInfo
 {
