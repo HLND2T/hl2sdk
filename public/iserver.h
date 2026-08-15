@@ -246,6 +246,15 @@ public:
 	virtual void	PreserveSteamID( void ) = 0;
 	virtual CRC32_t	GetServerSerializersCRC( void ) = 0;
 	virtual void	*GetServerSerializersMsg( void ) = 0;
+	// CNetworkServerService appends 8 concrete-only virtual slots (indices 43-50) beyond the abstract interface.
+	virtual void	unk_043( void ) = 0;
+	virtual void	unk_044( void ) = 0;
+	virtual void	unk_045( void ) = 0;
+	virtual void	unk_046( void ) = 0;
+	virtual void	unk_047( void ) = 0;
+	virtual void	unk_048( void ) = 0;
+	virtual void	unk_049( void ) = 0;
+	virtual void	unk_050( void ) = 0;
 };
 
 typedef CNetworkGameServerBase IServer;
