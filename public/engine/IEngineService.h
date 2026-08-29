@@ -102,6 +102,7 @@ public:
 	virtual void		SetFrameTimeAmnesty( const char *amnesty, int, float frametime ) = 0;
 	virtual const char *GetFrameTimeAmnesty( bool check_cvar ) = 0;
 	virtual void		unk301() = 0;
+	virtual void		unk302() = 0;
 #ifdef _LINUX
 	virtual void		UnregisterPrerequisite( IPrerequisite * ) = 0;
 #endif
