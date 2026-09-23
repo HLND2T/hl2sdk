@@ -64,8 +64,6 @@ public:
 	virtual bool		IsLoopSwitchQueued(void) const = 0;
 	virtual bool		IsLoopSwitchRequested(void) const = 0;
 
-	virtual bool		unk001(void) const = 0;
-
 	virtual CEventDispatcher<CEventIDManager_Default>* GetEventDispatcher(void) = 0;
 	virtual void		*GetDebugVisualizerMgr( void ) = 0;
 	virtual int			GetActiveLoopClientServerMode( void ) const = 0;

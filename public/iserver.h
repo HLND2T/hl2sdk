@@ -123,6 +123,8 @@ public:
 	virtual void	SetServerState( server_state_t eNewState ) = 0;
 	virtual void	SpawnServer( const char * ) = 0;
 
+	virtual void	unk601() = 0;
+
 	virtual int 	GetSpawnGroupLoadingStatus( SpawnGroupHandle_t ) = 0;
 	virtual void	SetSpawnGroupDescription( SpawnGroupHandle_t, const char * ) = 0;
 

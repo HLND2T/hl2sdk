@@ -317,6 +317,10 @@ public:
 	CUtlOrderedMap<CUtlSymbolLarge, CUtlVector<CEntityHandle>*, CDefLess<CUtlSymbolLarge>, uint16> m_entityNames;
 
 	CEventQueue m_EventQueue;
+	// Placeholder for the 0x88 bytes of CEventQueue storage present in the shipped
+	// binary but not yet modeled here (real CEventQueue is 0x108, this model is 0x80).
+	// Keeps the offsets of the following members aligned with the reference artifacts.
+	uint8 m_Unk7[0x88];
 	CUtlVectorFixedGrowable<IEntityIONotify*, 2> m_entityIONotifiers;
 	int m_nSuppressDormancyChangeCount;
 	NetworkSerializationMode_t m_eNetworkSerializationMode;
