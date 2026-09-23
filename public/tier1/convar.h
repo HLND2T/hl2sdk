@@ -238,9 +238,10 @@ struct CVarCreationBase_t
 											// Note: IVEngineClient::ClientCmd_Unrestricted can run any client command.
 
 #define FCVAR_EXECUTE_PER_TICK		(1ull<<29)
-
+#define FCVAR_SNAPSHOT_IGNORED		(1ull<<30) // TakeConVarSnapshot and ResetConVarsToSnapshot ignores cvars with this flag set
 #define FCVAR_DEFENSIVE				(1ull<<32)
 
+#define FCVAR_GAMEINFO_CANNOT_OVERRIDE (1ull<<34) // Code defaults can't be overridden from gameinfo
 
 //-----------------------------------------------------------------------------
 // Called when a ConCommand needs to execute
@@ -776,6 +777,7 @@ template<> void CvarTypeTrait_ValueToStringFn<Color>( const CVValue_t *obj, CBuf
 		buf.Format( "%d %d %d %d", obj->m_clrValue[0], obj->m_clrValue[1], obj->m_clrValue[2], obj->m_clrValue[3] );
 }
 
+template<> void CvarTypeTrait_ClampFn<bool>( CVValue_t *obj, const CVValue_t *min, const CVValue_t *max ) { }
 template<> void CvarTypeTrait_ClampFn<CUtlString>( CVValue_t *obj, const CVValue_t *min, const CVValue_t *max ) { }
 template<> void CvarTypeTrait_ClampFn<Color>( CVValue_t *obj, const CVValue_t *min, const CVValue_t *max )
 {
@@ -981,6 +983,7 @@ public:
 
 	// AMNOTE: Expects you to manually allocate its value and for it to be alive while it's used by the cvar
 	// Also you should be responsible for clearing memory on cleanup, by default game uses CCvar memory allocator for this
+	// These are ignored for string and bool types!
 	void SetMinValue( CVValue_t *value ) { m_minValue = value; }
 	void SetMaxValue( CVValue_t *value ) { m_maxValue = value; }
 
