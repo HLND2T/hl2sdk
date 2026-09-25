@@ -257,6 +257,10 @@ public:
 	virtual void	unk_048( void ) = 0;
 	virtual void	unk_049( void ) = 0;
 	virtual void	unk_050( void ) = 0;
+#if defined( COMPILER_GCC )
+	// Linux appends another concrete-only virtual after the shared interface tail.
+	virtual void	unk_051( void ) = 0;
+#endif
 };
 
 typedef CNetworkGameServerBase IServer;
