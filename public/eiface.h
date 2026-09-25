@@ -516,6 +516,10 @@ public:
 	virtual void			unk_100() = 0;
 	virtual void			unk_101() = 0;
 	virtual void			unk_102() = 0;
+#if defined( COMPILER_GCC )
+	// The Linux concrete primary table has one additional trailing slot.
+	virtual void			unk_103() = 0;
+#endif
 };
 
 //-----------------------------------------------------------------------------
