@@ -166,7 +166,7 @@ DECLARE_POINTER_HANDLE( HSCRIPT );
 
 #include "variant.h"
 
-typedef uint8 ScriptDataType_t;
+typedef fieldtype_t ScriptDataType_t;
 typedef CVariant ScriptVariant_t;
 
 #define SCRIPT_VARIANT_NULL ScriptVariant_t()
@@ -235,11 +235,14 @@ enum ScriptFuncBindingFlags_t
 	SF_MEMBER_FUNC	= 0x01,
 };
 
+struct ScriptClassDesc_t;
+
 typedef bool (*ScriptBindingFunc_t)( void *pFunction, void *pContext, ScriptVariant_t *pArguments, int nArguments, ScriptVariant_t *pReturn );
 
 struct ScriptFunctionBinding_t
 {
 	ScriptFuncDescriptor_t	m_desc;
+    ScriptClassDesc_t      *m_pClassDesc;
 	ScriptBindingFunc_t		m_pfnBinding;
 	void *					m_pFunction;
 	unsigned				m_flags;
