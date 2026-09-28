@@ -102,7 +102,7 @@ public:
 
 	virtual netadr_t &GetPublicAdr() = 0;
 	virtual netadr_t &GetLocalAdr() = 0;
-	virtual float GetFakeLag( int sock ) = 0;
+	virtual uint16 GetBoundUDPPort( int sock ) = 0;
 	virtual uint16 GetUDPPort( int sock ) = 0;
 
 	virtual void unk201() = 0;
