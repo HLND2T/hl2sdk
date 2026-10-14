@@ -126,7 +126,7 @@ public:
 	virtual void	SetDemoRecorder( IDemoRecorderBase *pDemoRecorder ) = 0;
 	virtual void	SetInstantReplayIntercept( IInstantReplayIntercept *pInstantReplayIntercept ) = 0;
 	virtual bool	IsNull( void ) const = 0;
-	virtual bool	ProcessDemoPacket( NetPacket_t *packet ) = 0;
+	virtual bool	ParseMessagesDemo( NetPacket_t *packet ) = 0;
 	virtual void	ProcessMessages() = 0;
 	
 	virtual void	InstallMessageFilter( INetworkMessageProcessingPreFilter *pFilter ) = 0;
@@ -134,6 +134,7 @@ public:
 	
 	virtual void	PostReceivedNetMessage( INetworkMessageInternal *pNetMessage, const CNetMessage *pData, const NetChannelBufType_t *pBufType, int nBits, int nInSequenceNr ) = 0;
 	virtual void	InsertReplayMessage( InstantReplayMessage_t &msg ) = 0;
+	virtual void	unk121() = 0;
 	virtual bool	HasQueuedNetMessages( int nMessageId ) const = 0;
 
 	virtual void	SetPendingDisconnect( ENetworkDisconnectionReason reason ) = 0;
