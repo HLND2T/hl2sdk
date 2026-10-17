@@ -94,6 +94,12 @@ public:
 	virtual INetworkStringTable	*FindTable( const char *tableName ) const = 0;
 	virtual INetworkStringTable	*GetTable( TABLEID stringTable ) const = 0;
 	virtual int					GetNumTables( void ) const = 0;
+
+	// Container identifier used by the engine's own log messages: the server
+	// container returns "SV", the client container returns "CL".
+	// Trailing vtable slot: engine2 index 17 (0x18010d060) and libengine2
+	// index 18 (0x59b450); both return the pointer stored at this+0x28.
+	virtual const char			*GetName( void ) const = 0;
 };
 
 #endif // NETWORKSTRINGTABLEDEFS_H
